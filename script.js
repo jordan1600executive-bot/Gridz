@@ -1,11 +1,16 @@
 let grid = Array(16).fill(null);
 let score = 0;
-// Balanced letter bag
-const letterBag = "AAAAAAAAEEEEEEEEIIIIIIIIIOOOOOOOOOUUUULLLLNNNNRRRRRRSSSSSSSTTTTTTT";
-// Expanded dictionary
-const dictionary = ["HAWK", "LOOK", "WOOD", "COOL", "POOL", "TEAM", "BALL", "SITE", "GAME", "PLAY", "TITE", "TIME", "MATE", "TALE", "SALT", "LAST"];
-
+let dictionary = []; // This will hold all 4-letter words
+const letterBag = "AAAAAAAAAEEEEEEEEEEEEIIIIIIIIIOOOOOOUUUULLLLNNNNRRRRRRSSSSSSTTTTTT";
 let currentLetter = letterBag.charAt(Math.floor(Math.random() * letterBag.length));
+
+// Fetch a real dictionary of 4-letter words
+async function loadDictionary() {
+    const response = await fetch('https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt');
+    const text = await response.text();
+    dictionary = text.split('\n').filter(word => word.length === 4).map(w => w.toUpperCase());
+    console.log("Dictionary Loaded! Words count: " + dictionary.length);
+}
 
 function renderGame() {
     const gridDiv = document.getElementById('grid');
@@ -23,34 +28,32 @@ function renderGame() {
     document.getElementById('score-list').innerHTML = scores.map(s => `<div>${s.name}: ${s.score}</div>`).join('');
 }
 
-function placeLetter(index) {
+async function placeLetter(index) {
     if (grid[index] === null) {
         grid[index] = currentLetter;
         score += 10;
-        
-        let rowCleared = false;
-        // Check rows
+
+        // Check Horizontal
         for (let i = 0; i < 4; i++) {
             let row = grid.slice(i * 4, i * 4 + 4).join('');
             if (row.length === 4 && dictionary.includes(row)) {
                 for (let j = 0; j < 4; j++) grid[i * 4 + j] = null;
                 score += 500;
-                rowCleared = true;
             }
         }
-        
+        // Check Vertical
+        for (let i = 0; i < 4; i++) {
+            let col = (grid[i] || "") + (grid[i+4] || "") + (grid[i+8] || "") + (grid[i+12] || "");
+            if (col.length === 4 && dictionary.includes(col)) {
+                grid[i] = grid[i+4] = grid[i+8] = grid[i+12] = null;
+                score += 500;
+            }
+        }
+
         currentLetter = letterBag.charAt(Math.floor(Math.random() * letterBag.length));
         renderGame();
-
-        if (!grid.includes(null)) {
-            let name = prompt("GAME OVER! Enter your name:");
-            let scores = JSON.parse(localStorage.getItem('highScores')) || [];
-            scores.push({ name: name || "PLAYER", score: score });
-            scores.sort((a, b) => b.score - a.score);
-            localStorage.setItem('highScores', JSON.stringify(scores.slice(0, 5)));
-            location.reload();
-        }
     }
 }
 
-renderGame();
+// Start game
+loadDictionary().then(() => renderGame());
