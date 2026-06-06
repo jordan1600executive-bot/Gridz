@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>GRIDZ</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-container">
-        <aside id="sidebar">
+    <div id="game-wrapper">
+        <div id="left-panel">
             <h2>HOW TO PLAY</h2>
             <p>1. Tap to place letters.</p>
             <p>2. Form 4-letter words to clear.</p>
-        </aside>
-        
-        <main>
-            <h1>GRIDZ</h1>
-            <div id="score-board">Score: 0</div>
-            <div id="grid"></div> <div id="next-letter">Next: -</div>
-        </main>
+            <p>3. Get the highest score!</p>
+        </div>
 
-        <aside id="legends">
+        <div id="center-panel">
+            <h1>GRIDZ</h1>
+            <div id="score">Score: 0</div>
+            <div id="grid"></div>
+            <div id="next-letter">NEXT LETTER: -</div>
+        </div>
+
+        <div id="right-panel">
             <h2>TOP 5 LEGENDS</h2>
-            <ul id="high-scores"></ul>
-        </aside>
+            <div id="high-scores"></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
