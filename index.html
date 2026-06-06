@@ -2,28 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GRIDZ</title>
+    <title>GRIDZ SNAKE</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-wrapper">
-        <div id="instructions">
-            <h2>HOW TO PLAY</h2>
-            <p>1. Tap the grid to place letters.</p>
-            <p>2. Form 4-letter words to clear rows.</p>
-            <p>3. Get the highest score!</p>
-        </div>
-        <div id="game-container">
-            <h1>GRIDZ</h1>
-            <div id="score">Score: 0</div>
-            <div id="grid"></div>
-            <div id="rack">NEXT LETTER: <span id="current-letter"></span></div>
-        </div>
-        <div id="leaderboard">
-            <h3>TOP 5 LEGENDS</h3>
-            <div id="score-list"></div>
-        </div>
+    <div id="game-ui">
+        <h1>GRIDZ</h1>
+        <div id="score">Score: 0</div>
+        <div id="current-letter">Next: Loading...</div>
     </div>
+    <div id="grid"></div>
     <script src="script.js"></script>
 </body>
 </html>
