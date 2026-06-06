@@ -1,6 +1,12 @@
 let grid = Array(16).fill(null);
 let score = 0;
-let currentLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+let currentLetter = getRandomLetter();
+
+// Weighted function: Gives more vowels and common letters
+function getRandomLetter() {
+    const letters = "AAAAAAAAEEEEEEEEIIIIIIOOOOOOUUUUSSSSTTTTRRRRLLLLNNNN";
+    return letters.charAt(Math.floor(Math.random() * letters.length));
+}
 
 function render() {
     document.getElementById('grid').innerHTML = grid.map((v, i) => 
@@ -13,14 +19,14 @@ function place(index) {
     if(!grid[index]) {
         grid[index] = currentLetter;
         score += 10;
-        currentLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        currentLetter = getRandomLetter(); 
         render();
         if (!grid.includes(null)) gameOver();
     }
 }
 
 function gameOver() {
-    let name = prompt("GAME OVER! Enter your name:");
+    let name = prompt("GAME OVER! Enter your name for the leaderboard:");
     let scores = JSON.parse(localStorage.getItem('highScores')) || [];
     scores.push({ name: name || "PLAYER", score: score });
     scores.sort((a, b) => b.score - a.score);
