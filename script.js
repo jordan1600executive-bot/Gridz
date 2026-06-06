@@ -1,10 +1,9 @@
 let grid = Array(16).fill(null);
 let score = 0;
-// We use a weighted string to make vowels much more common
 const letterBag = "AAAAAAAAAEEEEEEEEEEEEIIIIIIIIIOOOOOOOOUUUULLLLNNNNRRRRRRSSSSSSTTTTTT";
 const dictionary = ["HAWK", "LOOK", "WOOD", "COOL", "POOL", "TEAM", "BALL", "SITE", "GAME", "PLAY"];
 
-let currentLetter = getRandomLetter();
+let currentLetter = "";
 
 function getRandomLetter() {
     return letterBag.charAt(Math.floor(Math.random() * letterBag.length));
@@ -47,4 +46,14 @@ function gameOver() {
     location.reload();
 }
 
-render();
+function showLeaderboard() {
+    let scores = JSON.parse(localStorage.getItem('highScores')) || [];
+    document.getElementById('score-list').innerHTML = scores.map(s => `<div>${s.name}: ${s.score}</div>`).join('');
+}
+
+// THIS IS THE FIX: Wait until the page loads
+window.onload = () => {
+    currentLetter = getRandomLetter();
+    render();
+    showLeaderboard();
+};
