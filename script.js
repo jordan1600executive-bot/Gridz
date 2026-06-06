@@ -1,51 +1,62 @@
 let grid = Array(16).fill(null);
 let score = 0;
-let currentLetter = getRandomLetter();
-// A small sample list of 4-letter words
-const dictionary = ["HAWK", "LOOK", "WOOD", "COOL", "POOL"]; 
+// Weighted letters (More vowels)
+const letterBag = "AAAAAAAAAEEEEEEEEEEEEIIIIIIIIIOOOOOOUUUULLLLNNNNRRRRRRSSSSSSTTTTTT";
+// Add more 4-letter words here as needed
+const dictionary = ["HAWK", "LOOK", "WOOD", "COOL", "POOL", "TEAM", "BALL", "SITE", "GAME", "PLAY"];
 
-function getRandomLetter() {
-    const letters = "AAAAAAAAEEEEEEEEIIIIIIOOOOOOUUUUSSSSTTTTRRRRLLLLNNNN";
-    return letters.charAt(Math.floor(Math.random() * letters.length));
-}
+let currentLetter = letterBag.charAt(Math.floor(Math.random() * letterBag.length));
 
-function render() {
-    document.getElementById('grid').innerHTML = grid.map((v, i) => 
-        `<div class="tile" onclick="place(${i})">${v || ''}</div>`).join('');
-    document.getElementById('score').innerText = `Score: ${score}`;
+// Function to refresh the screen
+function renderGame() {
+    // Draw Grid
+    const gridDiv = document.getElementById('grid');
+    gridDiv.innerHTML = "";
+    grid.forEach((v, i) => {
+        const tile = document.createElement('div');
+        tile.className = 'tile';
+        tile.innerText = v || '';
+        tile.onclick = () => placeLetter(i);
+        gridDiv.appendChild(tile);
+    });
+
+    // Update Score
+    document.getElementById('score').innerText = "Score: " + score;
     document.getElementById('current-letter').innerText = currentLetter;
+
+    // Update Leaderboard
+    let scores = JSON.parse(localStorage.getItem('highScores')) || [];
+    document.getElementById('score-list').innerHTML = scores.map(s => `<div>${s.name}: ${s.score}</div>`).join('');
 }
 
-function place(index) {
-    if(!grid[index]) {
+function placeLetter(index) {
+    if (grid[index] === null) {
         grid[index] = currentLetter;
         score += 10;
-        currentLetter = getRandomLetter();
-        checkWords(); // Check for words every time you place a letter
-        render();
-        if (!grid.includes(null)) gameOver();
-    }
-}
 
-function checkWords() {
-    // Check the 4 rows
-    for (let i = 0; i < 4; i++) {
-        let row = grid.slice(i * 4, i * 4 + 4).join('');
-        if (dictionary.includes(row)) {
-            // Clear the row
-            for (let j = 0; j < 4; j++) grid[i * 4 + j] = null;
-            score += 500; // Big bonus for words
+        // Check for words and clear rows
+        for (let i = 0; i < 4; i++) {
+            let row = grid.slice(i * 4, i * 4 + 4).join('');
+            if (row.length === 4 && dictionary.includes(row)) {
+                for (let j = 0; j < 4; j++) grid[i * 4 + j] = null;
+                score += 500;
+            }
+        }
+
+        currentLetter = letterBag.charAt(Math.floor(Math.random() * letterBag.length));
+        renderGame();
+
+        // Game Over Check
+        if (!grid.includes(null)) {
+            let name = prompt("GAME OVER! Enter your name:");
+            let scores = JSON.parse(localStorage.getItem('highScores')) || [];
+            scores.push({ name: name || "PLAYER", score: score });
+            scores.sort((a, b) => b.score - a.score);
+            localStorage.setItem('highScores', JSON.stringify(scores.slice(0, 5)));
+            location.reload();
         }
     }
 }
 
-function gameOver() {
-    let name = prompt("GAME OVER! Enter your name:");
-    let scores = JSON.parse(localStorage.getItem('highScores')) || [];
-    scores.push({ name: name || "PLAYER", score: score });
-    scores.sort((a, b) => b.score - a.score);
-    localStorage.setItem('highScores', JSON.stringify(scores.slice(0, 5)));
-    location.reload();
-}
-
-render();
+// Initial draw
+renderGame();
