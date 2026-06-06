@@ -1,7 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
-body { background: #0a0a0a; color: #00ffcc; font-family: 'Orbitron', sans-serif; display: flex; justify-content: center; padding: 20px; }
-#game-wrapper { display: flex; gap: 40px; }
-#grid { display: grid; grid-template-columns: repeat(4, 70px); gap: 8px; margin: 20px 0; }
-.tile { width: 70px; height: 70px; border: 2px solid #00ffcc; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; }
-.tile:hover { background: #00ffcc33; }
-#instructions, #leaderboard { width: 200px; padding: 15px; border: 1px solid #00ffcc; }
+body { background: #000; color: #0ff; font-family: monospace; display: flex; flex-direction: column; align-items: center; }
+#grid {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    gap: 2px;
+    margin-top: 20px;
+}
+.tile {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #111;
+}
+.tile:hover { background: #222; }
